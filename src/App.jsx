@@ -1,13 +1,20 @@
 import { useState } from 'react'
 import Dropzone from './components/Dropzone'
 import './App.css'
+import { getPixels } from './lib/loadImage'
+import { extractPalette } from './lib/extractPalette'
+import Swatch from './components/Swatch'
 
 export default function App() {
   const [imageUrl, setImageUrl] = useState(null)
+  const [palette, setPalette] = useState([])
 
-  function handleImage(file) {
+  async function handleImage(file) {
     if (imageUrl) URL.revokeObjectURL(imageUrl)
     setImageUrl(URL.createObjectURL(file))
+
+    const pixels = await getPixels(file)
+    setPalette(extractPalette(pixels))
   }
 
   return (
@@ -17,6 +24,7 @@ export default function App() {
       {imageUrl && (
         <img className="preview" src={imageUrl} alt="Imagen subida" />
       )}
+      {palette.length > 0 && <Swatch color={palette[0]} />}
     </main>
   )
 }
