@@ -3,7 +3,7 @@ import Dropzone from './components/Dropzone'
 import './App.css'
 import { getPixels } from './lib/loadImage'
 import { extractPalette } from './lib/extractPalette'
-import Swatch from './components/Swatch'
+import PaletteGrid from './components/PaletteGrid'
 
 export default function App() {
   const [imageUrl, setImageUrl] = useState(null)
@@ -24,7 +24,7 @@ export default function App() {
       {imageUrl && (
         <img className="preview" src={imageUrl} alt="Imagen subida" />
       )}
-      {palette.length > 0 && <Swatch color={palette[0]} />}
+      {palette.length > 0 && <PaletteGrid palette={palette} />}
     </main>
   )
 }
