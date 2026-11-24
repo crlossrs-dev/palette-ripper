@@ -1,12 +1,13 @@
 export function extractPalette(pixels, count = 6, step = 32) {
   const buckets = new Map()
+  const half = step / 2
   for (let i = 0; i < pixels.length; i += 4) {
     const r = pixels[i]
     const g = pixels[i + 1]
     const b = pixels[i + 2]
     const a = pixels[i + 3]
     if (a < 128) continue
-    const half = step / 2
+
     const rKey = Math.floor(r / step) * step + half
     const gKey = Math.floor(g / step) * step + half
     const bKey = Math.floor(b / step) * step + half
