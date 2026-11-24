@@ -1,95 +1,365 @@
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: #111;
-  color: #eee;
-}
-
+/* ---------- Página ---------- */
 .app {
-  max-width: 720px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: center;
+  gap: 32px;
 }
 
+/* Subrayado verde que crece al pasar el cursor (mismo gesto que el portfolio) */
+.app h1,
+.swatch__label {
+  background-image: linear-gradient(var(--hl), var(--hl));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 2px;
+  transition: background-size 0.28s cubic-bezier(0.2, 0.7, 0.2, 1);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* ---------- Título: como una entrada del índice ---------- */
+.app h1 {
+  margin: 24px 0 0;
+  text-align: center;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(44px, 9vw, 132px);
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  background-size: 0% 6px;
+  animation: reveal 0.32s steps(4) both;
+}
+
+.app h1:hover {
+  background-size: 100% 6px;
+}
+
+.app h1::before {
+  content: '[ PRJ-001 ]';
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--code);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* Aparición "a saltos", igual que la previsualización del portfolio */
+@keyframes reveal {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------- Dropzone: un panel gris vacío ---------- */
 .dropzone {
-  border: 2px dashed #555;
-  border-radius: 12px;
-  padding: 48px 24px;
+  width: min(640px, 100%);
+  aspect-ratio: 16 / 10;
+  max-height: 38svh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 24px;
   text-align: center;
   cursor: pointer;
-  transition:
-    border-color 0.2s,
-    background 0.2s;
+  background: var(--panel);
+  transition: background-color 0.2s steps(3);
 }
 
-.dropzone:hover,
+.dropzone::before {
+  content: '[ Input ]';
+  font-family: var(--code);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.dropzone p {
+  margin: 0;
+  font-weight: 500;
+  font-size: clamp(17px, 1.6vw, 21px);
+  line-height: 1.3;
+  /* subrayado por línea: si el texto ocupa dos líneas, se subrayan las dos */
+  text-decoration: underline 2px transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s steps(3);
+}
+
+.dropzone:hover p {
+  text-decoration-color: var(--hl);
+}
+
+/* Al arrastrar encima: el panel se vuelve verde y el texto se subraya en negro */
 .dropzone--active {
-  border-color: #fff;
-  background: #1c1c1c;
+  background: var(--hl);
 }
 
-.dropzone__error {
-  color: #ff6b6b;
+.dropzone--active::before {
+  color: rgba(17, 17, 17, 0.7);
 }
 
-.preview {
-  max-width: 100%;
-  border-radius: 12px;
+.dropzone--active p {
+  text-decoration-color: var(--ink);
 }
 
+.dropzone .dropzone__error {
+  font-family: var(--code);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 2px 8px;
+}
+
+/* ---------- Imagen ---------- */
 .preview {
   display: block;
-  max-width: 100%;
+  max-width: min(980px, 100%);
   max-height: 60vh;
   width: auto;
   height: auto;
-  margin: 0 auto;
-  border-radius: 12px;
+  background: var(--panel);
+  animation: reveal 0.32s steps(4) both;
 }
 
+/* ---------- Paleta ---------- */
 .palette-grid {
+  width: 100%;
+  max-width: 980px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ink);
+  counter-reset: chip;
+}
+
+.palette-grid::before {
+  content: '[ Palette ]';
+  grid-column: 1 / -1;
+  font-family: var(--code);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }
 
 .swatch {
   all: unset;
+  box-sizing: border-box;
+  counter-increment: chip;
   display: flex;
   flex-direction: column;
-  border-radius: 14px;
-  overflow: hidden;
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
+  gap: 8px;
   cursor: pointer;
-  transition:
-    transform 0.15s ease,
-    border-color 0.15s ease;
+  animation: reveal 0.32s steps(4) both;
 }
 
-.swatch:hover {
-  transform: translateY(-10px);
-  border-color: #555;
+/* Entran una detrás de otra */
+.swatch:nth-child(1) {
+  animation-delay: 0.04s;
+}
+.swatch:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.swatch:nth-child(3) {
+  animation-delay: 0.16s;
+}
+.swatch:nth-child(4) {
+  animation-delay: 0.22s;
+}
+.swatch:nth-child(5) {
+  animation-delay: 0.28s;
+}
+.swatch:nth-child(6) {
+  animation-delay: 0.34s;
+}
+.swatch:nth-child(n + 7) {
+  animation-delay: 0.4s;
 }
 
-.swatch:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
+/* Número de color: C-01, C-02… */
+.swatch::before {
+  content: 'C-' counter(chip, decimal-leading-zero);
+  order: 2;
+  font-family: var(--code);
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
 }
 
 .swatch__color {
   display: block;
-  height: 96px;
+  aspect-ratio: 4 / 5;
+  transition: clip-path 0.2s steps(3);
+  clip-path: inset(0);
+}
+
+.swatch:hover .swatch__color {
+  clip-path: inset(6px);
 }
 
 .swatch__label {
-  padding: 10px 12px;
-  font-family: ui-monospace, 'SF Mono', monospace;
-  font-size: 13px;
-  letter-spacing: 0.04em;
+  order: 3;
+  width: max-content;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 22px;
+  line-height: 26px;
+  letter-spacing: 0.01em;
   text-transform: uppercase;
-  color: #ddd;
+}
+
+.swatch:hover .swatch__label,
+.swatch:focus-visible .swatch__label {
+  background-size: 100% 2px;
+}
+
+/* Tras el clic, el botón queda enfocado: el código se marca en verde */
+.swatch:focus .swatch__label {
+  background-size: 100% 100%;
+}
+
+.swatch:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 4px;
+}
+
+/* ============================================================
+   Con imagen cargada: tres columnas en una sola pantalla
+   [ dropzone ]  [ imagen ]  [ paleta en vertical ]
+   :has() mira si ya existe .preview, sin tocar el JSX.
+   ============================================================ */
+@media (min-width: 900px) {
+  /* La página entera cabe en la pantalla: título, columnas y pie */
+  body:has(.preview) {
+    height: 100svh;
+  }
+
+  #root:has(.preview) {
+    min-height: 0;
+  }
+
+  body:has(.preview) .foot {
+    margin-top: 24px;
+  }
+
+  .app:has(.preview) {
+    height: 100%;
+    grid-template-rows: auto minmax(0, 1fr);
+    display: grid;
+    grid-template-columns: minmax(200px, 280px) minmax(0, 1fr) minmax(
+        200px,
+        260px
+      );
+    grid-template-areas:
+      'title title title'
+      'input image palette';
+    align-items: start;
+    gap: 24px 40px;
+  }
+
+  .app:has(.preview) h1 {
+    grid-area: title;
+    margin-top: 16px;
+    justify-self: start;
+    text-align: left;
+    font-size: clamp(36px, 4.4vw, 64px);
+  }
+
+  /* la dropzone se encoge a la izquierda */
+  .app:has(.preview) .dropzone {
+    grid-area: input;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    max-height: 100%;
+    animation: reveal 0.32s steps(4) both;
+  }
+
+  .app:has(.preview) .dropzone p {
+    font-size: 16px;
+  }
+
+  /* la imagen se ajusta al hueco que queda, sin deformarse */
+  .app:has(.preview) .preview {
+    grid-area: image;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    object-position: center top;
+    background: none;
+  }
+
+  /* la paleta, en vertical a la derecha */
+  .app:has(.preview) .palette-grid {
+    grid-area: palette;
+    max-height: 100%;
+    overflow-y: auto;
+    align-content: start;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    max-width: none;
+  }
+
+  .app:has(.preview) .swatch {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 14px;
+    align-items: end;
+  }
+
+  .app:has(.preview) .swatch__color {
+    grid-row: 1 / 3;
+    width: 64px;
+    aspect-ratio: 1;
+  }
+
+  .app:has(.preview) .swatch::before {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+  }
+
+  .app:has(.preview) .swatch__label {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .app:has(.preview) .swatch:hover .swatch__color {
+    clip-path: inset(4px);
+  }
+}
+
+/* ---------- Móvil ---------- */
+@media (max-width: 760px) {
+  .app {
+    gap: 32px;
+  }
+  .app h1 {
+    margin-top: 32px;
+  }
+  .palette-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
